@@ -17,7 +17,7 @@ To understand XCM better, it’s important to understand its boundaries and wher
 
 Not including bridges and the contracts pallet, Polkadot comes with three distinct systems for actually communicating XCM messages between its constituent chains: UMP, DMP and XCMP. UMP (Upward Message Passing) allows parachains to send messages to their relay chain. DMP (Downward Message Passing) allows the relay chain to pass messages down to one of their parachains. XCMP, is perhaps the best known of them, and this allows the parachains to send messages between themselves. XCM can be used to express the meaning of the messages over each of these three communication channels.
 
-TK> image
+![xcm_tech_stack](assets/xcm_tech_stack.png)
 
 In addition to sending messages between chains, XCM is also useful in other contexts, for transacting with a chain whose transaction format you don’t necessarily know well in advance. With chains whose business logic changes little (for example Bitcoin), the transaction format — or the format used by wallets to send instructions to the chain —tends to remain exactly the same, or at least compatible, indefinitely. With highly evolvable metaprotocol-based chains such as Polkadot and its constituent parachains, the business logic can be upgraded across the network with a single transaction. This can change anything, including the transaction format, introducing a potential problem for wallet maintainers, especially for wallets which are required to be kept offline (such as Parity Signer). Since XCM is well-versioned, abstract and general, it can be used as a means of providing a long-lasting transaction format for wallets to use to create many common transactions.
 
@@ -43,15 +43,15 @@ While the goal of XCM is to be general, flexible and future-proof, there are of 
 
 On top of that, there are many models for transferring tokens which we would want to support: We might want to simply control an account on a remote chain, allowing the local chain to have an address on the remote chain for receiving funds and to eventually transfer those funds it controls into other accounts on that remote chain.
 
-TK> image
+![xcm_remote_transfer](assets/xcm_remote_transfer.png)
 
 We might have two consensus systems, both of which are native homes for a particular token. Imagine a token such as USDT or USDC, which has instances — all perfectly fungible— on several different chains. It should be possible to burn such a token on one chain and mint a corresponding token on another supported chain. In the parlance of XCM, we call this teleporting owing to the idea that the apparent movement of an asset in fact happens by destroying it on one side and creating a clone on the other side.
 
-TK> image
+![xcm_teleport](assets/xcm_teleport.png)
 
 Finally, there may be two chains which want to nominate a third chain, one on which an asset might be considered native, to be used as a reserve for that asset. The derivative form of the asset on each of those chains would be fully backed, allowing the derivative asset to be exchanged for the underlying asset on the reserve chain backing it. This might be the case where the two chains do not necessarily trust each other, but (at least as far as the asset in question is concerned) are willing to trust the native chain of the asset. An example here would be where we have several community parachains which would like to send DOT between each other. They each have a local form of DOT which is backed fully by DOT controlled by the parachain on the Statemint chain (a native hub for DOT). When the local form of DOT is sent between the chains, in the background the “real” DOT is moving between parachain accounts on Statemint.
 
-TK> image
+![xcm_reserved_based_transfer](assets/xcm_reserved_based_transfer.png)
 
 Even this apparently modest level of functionality has a relatively large number of configurations whose usage might be desirable and requires some interesting design to avoid [overfitting](https://en.wikipedia.org/wiki/Overfitting).
 
