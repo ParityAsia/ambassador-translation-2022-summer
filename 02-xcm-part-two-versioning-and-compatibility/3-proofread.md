@@ -1,6 +1,6 @@
 ---
 proofreader: Jimmy Chu (jimmy.chu@parity.io)
-completion-date:
+completion-date: 2022-06-17
 ---
 
 # XCM Part II: 版本和兼容性
