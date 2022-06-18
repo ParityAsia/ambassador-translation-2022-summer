@@ -1,6 +1,6 @@
 ---
 proofreader: Jimmy Chu (jimmy.chu@parity.io)
-completion-date:
+completion-date: 2022-06-18
 ---
 
 # 跨共识消息格式 (XCM)
@@ -43,7 +43,7 @@ XCM 的设计并不是让每个支持该格式的系统都能解释任何可能�
 
 ### XCM 技术栈
 
-![xcm_tech_stack](assets/xcm_tech_stack.png)
+![xcm_tech_stack](./assets/xcm_tech_stack.png)
 
 XCM 可用于表达这三种通信通道上的信息的含义。
 
