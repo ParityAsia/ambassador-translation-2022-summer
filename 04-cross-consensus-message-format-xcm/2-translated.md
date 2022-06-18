@@ -7,7 +7,7 @@ snapshot-date: 2022-06-18
 
 # 跨共识消息格式 (XCM)
 
-> 原文链接：<https://wiki.polkadot.network/zh-CN/docs/learn-crosschain>
+> 原文链接：<https://wiki.polkadot.network/docs/learn-crosschain>
 >
 > 翻译：[Akagi201](https://github.com/Akagi201)
 
