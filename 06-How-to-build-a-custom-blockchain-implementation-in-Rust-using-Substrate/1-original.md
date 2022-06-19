@@ -1,7 +1,12 @@
-How to build a custom blockchain implementation in Rust using Substrate
-February 14, 2022  12 min read 
+---
+title: 'How to build a custom blockchain implementation in Rust using Substrate'
+src: https://blog.logrocket.com/custom-blockchain-implementation-rust-substrate/
+author: Mario Zupan
+snapshot-date: 2022-06-18
+---
 
-How To Build A Custom Blockchain Implementation In Rust Using Substrate
+# How to build a custom blockchain implementation in Rust using Substrate
+
 In a previous article, we explored the core concepts behind the Substrate blockchain framework. In this tutorial, we’ll actually get our hands dirty and implement a very basic custom blockchain application in Rust using Substrate.
 
 It’s not strictly necessary to have read the introductory article, but if some of the terminology seems alien or confusing to you, it might make sense to skim over “Substrate blockchain development: Core concepts” before moving on with this tutorial.
@@ -14,20 +19,27 @@ The basis of this application will be the Substrate Node Template, a fully set u
 
 In this tutorial, we will only concern ourselves with the backend part of the application and rely on the Substrate Front End Template to interact with the blockchain and our custom functionality. In a future post, we might extend this example and build a custom frontend application for it based on this template.
 
-Setup
+## Setup
 To setup our node template, we will use Kickstart, which you can install by executing the following:
 
+```
 cargo install kickstart
+```
+
 Kickstart is simply a CLI tool for setting up projects based on premade templates. Fortunately, there is a Substrate template for Kickstart.
 
 Now you can run this command in the root of your workspace:
 
+```
 kickstart https://github.com/sacha-l/kickstart-substrate
+```
+
 This will prompt you for a name. In both cases, simply put blogchain, then it will download and set up a local Substrate node template with a fully wired-up pallet by the name you gave.
 
 Let’s look at the file structure in the blogchain project:
 
-Node Template Folder Structure
+![blogchain](assets/blogchain.jpeg)
+
 As you can see, we have quite a few files and folders here. Most importantly, we have our pallets/blockchain area, where we will do most of our customizations and implement all of our business logic.
 
 node contains all the code we need to run the underlying node template. In runtime, all internal and external pallets are wired together, so they can run inside the node.
@@ -38,29 +50,45 @@ if you get lost at some point, or things don’t work, you can reference this re
 
 First, in runtime/src/lib,rs, change the following line:
 
+```
 TemplateModule: pallet_blogchain,
+```
+
 To:
 
+```
 Blogchain: pallet_blogchain,
+```
+
 This is important to ensure that our pallet has the correct name displayed in the frontend later on.
 
 Also, for setup reasons, we’ll add the Currency trait to our pallet because we’ll want to transfer some currency from one user to another later on.
 
 In pallets/blogchain/lib.rs, change the following:
 
+```
 use frame_support::pallet_prelude::*;
+```
+
 To:
 
+```
 use frame_support::{pallet_prelude::*, traits::Currency};
+```
+
 Within:
 
+```
 #[pallet::config]
 pub trait Config: frame_system::Config {
     type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     type Currency: Currency<Self::AccountId>; // <-- new
 }
+```
+
 This adds the Currency trait to our pallet. We also need to add this to runtime/lib.rs:
 
+```
 pub use frame_support::{
 ...
         traits::{Currency, KeyOwnerProofSystem, Randomness, StorageInfo},
@@ -71,13 +99,16 @@ impl pallet_blogchain::Config for Runtime {
         type Event = Event;
         type Currency = Balances; // <-- new
 }
+```
+
 Alright, that’s it for the setup. Make sure everything compiles and let’s move on to some data structures and state definitions.
 
-Data structures and storage
+## Data structures and storage
 In this section, we’ll implement a simple blogging system with comments and a tipping function.
 
 Let’s first add some data structures for blog posts and comments in /pallets/blogchain/lib.rs:
 
+```
 use frame_support::{
 ...
 inherent::Vec,
@@ -99,6 +130,8 @@ pub struct BlogPostComment<T: Config> {
         pub blog_post_id: T::Hash,
         pub author: <T as frame_system::Config>::AccountId,
 }
+```
+
 That looks a bit complex, so let’s unpack it.
 
 Let’s first look at the macros above the structs. We derive a couple of well-known helper traits, such as Clone, PartialEq, etc., but we also derive the scale_info::TypeInfo trait and use the scale_info macro. These are used for serialization and deserialization inside of Substrate, as well as for retrieving compile-time info about the types at runtime.
@@ -109,6 +142,7 @@ The BlogPostComment has a content and an author, but it also holds the blog_post
 
 The next step is to define the state we want to keep on the blockchain. For this purpose, we’ll create two StorageMap instances holding the posts and comments:
 
+```
 /// Storage Map for BlogPosts by BlogPostId (Hash) to a BlogPost
 #[pallet::storage]
 #[pallet::getter(fn blog_posts)]
@@ -119,6 +153,8 @@ pub(super) type BlogPosts<T: Config> = StorageMap<_, Twox64Concat, T::Hash, Blog
 #[pallet::getter(fn blog_post_comments)]
 pub(super) type BlogPostComments<T: Config> =
         StorageMap<_, Twox64Concat, T::Hash, Vec<BlogPostComment<T>>>;
+```
+
 With the pallet::storage macro we tell the system that this is a piece of persistent storage and the pallet::getter macro makes it so we can query this later on under the given function name.
 
 For the blog posts, we use a StorageMap, which is essentially a hash map, mapping from T::Hash to a BlogPost, so from a blog post id to a blog post.
@@ -131,6 +167,7 @@ In Substrate, there is the concept of Events, which can be used for informing cl
 
 For this purpose, we’ll need to add an event for each of our actions:
 
+```
 #[pallet::event]
 #[pallet::generate_deposit(pub(super) fn deposit_event)]
 pub enum Event<T: Config> {
@@ -138,12 +175,15 @@ pub enum Event<T: Config> {
         BlogPostCommentCreated(Vec<u8>, T::AccountId, T::Hash),
         Tipped(T::AccountId, T::Hash),
 }
+```
+
 We add events for when a blog post was created with the content, author, and ID of the blog post, and the same for a comment. When a user tips for a blog post, we send the tipper’s account ID and the ID of the blog post whose author has been tipped.
 
 Before moving on to implementing the actual logic for creating blog posts, comments, and tipping, we need a few more types for our error handling. We’d like to limit the size of blog posts and comments. Blog posts should be between 64 and 4,096 bytes in length and comments between 64 and 1,024. This is mostly to show off some error handling later on, but it’s a good idea to do this either way.
 
 First, we add some constants for this in our pallet config:
 
+```
 #[pallet::config]
 pub trait Config: frame_system::Config {
         type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
@@ -162,8 +202,11 @@ pub trait Config: frame_system::Config {
         #[pallet::constant]
         type BlogPostCommentMaxBytes: Get<u32>; // <-- new
 }
+```
+
 And some error types:
 
+```
 // Errors inform users that something went wrong.
 #[pallet::error]
 pub enum Error<T> {
@@ -178,8 +221,11 @@ pub enum Error<T> {
         BlogPostNotFound,// <-- new
         TipperIsAuthor,// <-- new
 }
+```
+
 Great! Now we need to define values for our constants in the runtime at runtime/lib.rs:
 
+```
 parameter_types! {
         pub const Version: RuntimeVersion = VERSION;
         pub const BlockHashCount: BlockNumber = 2400;
@@ -207,11 +253,14 @@ impl pallet_blogchain::Config for Runtime {
         type BlogPostCommentMinBytes = BlogPostCommentMinBytes; // <-- new
         type BlogPostCommentMaxBytes = BlogPostCommentMaxBytes; // <-- new
 }
+```
+
 That’s it for types and storage. Next, we’ll implement our functionality.
 
-Functions and extrinsics
+## Functions and extrinsics
 Let’s start with an extrinsic function for creating a blog post.
 
+```
 #[pallet::weight(10000)]
 #[transactional]
 pub fn create_blog_post(origin: OriginFor<T>, content: Vec<u8>) -> DispatchResult {
@@ -240,6 +289,8 @@ pub fn create_blog_post(origin: OriginFor<T>, content: Vec<u8>) -> DispatchResul
 
         Ok(())
 }
+```
+
 Let’s start from the top. With pallet::weight, we define the computational weight of this extrinsic. In this case, we hardcode it because this is just a simple example. This value should have a relation to the amount of processing resources that are needed for this operation to happen and the fee for executing this operation will include this weight, so the higher the weight, the higher the transaction fees for executing an extrinsic.
 
 The transactional macro makes it so that any state changes within this extrinsic are only made if it returns no error. This is similar to transactional behavior with relational databases, where you only want to persist a change if all changes go through. We need this here because we add both a new blog post and an empty list of comments.
@@ -258,6 +309,7 @@ It’s actually pretty simple, right? This is similar to how you’d implement a
 
 The implementation of adding comments and tipping are equally straightforward. Let’s look at those next.
 
+```
 #[pallet::weight(5000)]
 pub fn create_blog_post_comment(
         origin: OriginFor<T>,
@@ -299,6 +351,8 @@ pub fn create_blog_post_comment(
 
         Ok(())
 }
+```
+
 As you can see, the weight here is a bit less; there’s less to do and we’d want to make commenting a bit cheaper than posting to encourage discussion.
 
 The process is similar: we check the author, validate the content, and create a struct for the comment.
@@ -309,6 +363,7 @@ If a blog post is found, we simply push the blog post comment onto the vector of
 
 For our tipping feature, we want users to provide a blog post ID and an amount they’d like to send to the author. Let’s look at how that works.
 
+```
 #[pallet::weight(500)]
 pub fn tip_blog_post(
         origin: OriginFor<T>,
@@ -333,6 +388,8 @@ pub fn tip_blog_post(
 
         Ok(())
 }
+```
+
 As you can see, we expect the blog_post_id, a T::Hash, and the amount, which is a Balance of the configured Currency in our pallet.
 
 We validate the tipper and check whether the given blog post ID actually leads to an existing blog post, returning an error if not.
@@ -347,13 +404,18 @@ Once you start thinking in terms of this system of incentives and game theory, b
 
 Let’s test our system to see if it works!
 
-Testing
+## Testing
 Now, to test our simple app, let’s build it for release first:
 
+```
 cargo build --release
+```
 Next, we’ll start a local node in development mode with a fresh state every time we start it:
 
+```
 ./target/release/node-blogchain --tmp --dev
+```
+
 To interact with our application, we have two options:
 
 The Substrate Front End Template
@@ -362,58 +424,67 @@ Here, we’ll use the Substrate Front End Template, but feel free to play around
 
 To download, set up, and start the frontend template, simply execute:
 
+```
 git clone https://github.com/substrate-developer-hub/substrate-front-end-template.git
 cd substrate-front-end-template
 yarn install
 yarn start
+```
+
 This will start a frontend application at http://localhost:8000/substrate-front-end-template.
 
 There, you can already see your blockchain application state. At the top-right, you can see the selected account and switch between existing accounts.
 
-Substrate Front End Template: Overview
+![js1](assets/js1.avif)
+
 Below, you can see the currency balance for each account:
+![js2](assets/js2.avif)
 
-Substrate Front End Template: Balances
 Now, let’s create our first blog post by using the Pallet Interactor on the bottom left. We select the blogchain pallet and the createBlogPost extrinsic. Then, write some text (at least 64 bytes, at most 4096 bytes) in the content field and click Signed.
+![js3](assets/js3.avif)
+![js4](assets/js4.avif)
 
-Substrate Front End Template: Creating A Blog Post
-Substrate Front End Template: Event Feed
 Great! The blog post creation worked, as we can see on the right in the Events feed.
 
 Let’s query for our blog post by selecting the Query radio button. Then, select the blogchain pallet again and the blogPosts storage (this is our actual StorageMap, which we defined above).
 Then, from the Events feed, copy the blog post’s ID, paste it into the form, and click Query.
+![js5](assets/js5.avif)
+![js6](assets/js6.avif)
 
-Substrate Front End Template: Blog Post ID
-Substrate Front End Template: Queried Blog Post
 If we use a valid blog post ID, we will get the persisted data on the chain for this entry in the following form:
 
+```
 {"content":"0x5468697320697320616e20696e746572657374696e672c20696e6e6f76617469766520616e642077656c6c207772697474656e20626c6f6720706f73742e20496e207468697320626c6f6720706f73742077652077696c6c206578706c6f7265207665727920696e746572657374696e6720636f6e636570747321","author":"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"}
-The content is the hex-encoded string. You can use a free online tool to convert it to a string:
+```
 
-Substrate Front End Template: Content In Plain Text
+The content is the hex-encoded string. You can use a free online tool to convert it to a string:
+![js7](assets/js7.avif)
+
 You can also find the author field in the JSON, which corresponds to the account ID you can find in the Balances table.
 
 Next, let’s create a comment. Switch to Bob’s account in the top right and use the Pallet Interactor to find blogchain → createBlogPostComment.
+![js8](assets/js8.avif)
 
 Substrate Front End Template: Creating A Comment
 Enter the blog post ID again and a comment (64–1024 bytes in length). Upon clicking Signed, we can see the Event feed again, which indicates that the fee was withdrawn from Bob’s account and the extrinsic worked.
 
 Now we can query for the comment as well:
+![js9](assets/js9.avif)
+![js10](assets/js10.avif)
 
-Substrate Front End Template: Create A Comment
-Substrate Front End Template: Comment Content In Plain Text
+
 Finally, let’s send a tip to the author of this blog post:
+![js11](assets/js11.avif)
 
-Substrate Front End Template: Tipping An Author
 And we can see how the balances changed:
+![js12](assets/js12.avif)
+![js13](assets/js13.avif)
 
-Substrate Front End Template: Balance Before Tip
-Substrate Front End Template: Balance After Tip
 That’s it — it works! Very cool stuff.
 
 Feel free to play around some more with the application through the frontend template. For example, you can see what happens in error cases (e.g., a blog post that’s too short) in the event feed. Happy exploring!
 
-Conclusion
+## Conclusion
 Based on Substrate Node Template and using the official docs, we were able to build a very simple custom blockchain application using Substrate.
 
 Of course this post only scratches the surface of blockchain development with Substrate, but as you can see in this example, extending the Substrate template to build custom logic on top is rather straightforward.
