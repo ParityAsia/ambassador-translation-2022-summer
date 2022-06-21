@@ -1,19 +1,19 @@
-SBP Graduates: Astar
-Parity Technologies
-Parity Technologies
+---
+title: 'SBP Graduates: Astar'
+src: https://www.parity.io/blog/sbp-graduates-astar
+author: Parity Technologies
+snapshot-date: 2022-06-18
+---
 
-Powering the decentralized Web @ Parity Technologies
+# SBP Graduates: Astar
 
-March 10, 2022 in Community, Parity Substrate, Polkadot
-
-3 min read
-
+![builder](assets/builder.jpeg)
 
 SBP Graduates highlights teams that have successfully completed the Substrate Builders Program and launched a parachain on Polkadot. This post takes a look at the third project to win a parachain auction on Polkadot: Astar.
 
 Astar Network (previously known as Plasm Network) is a dapp hub in the Polkadot ecosystem, supporting EVM, WebAssembly, and Layer2 solutions like rollups. When it comes to smart contracts, multi virtual machines and scalability are the key properties of the next-generation smart contract platform.
 
-What Astar offers to the Polkadot Ecosystem
+## What Astar offers to the Polkadot Ecosystem
 Astar has developed an innovative concept called “dApps Staking”, which is a Substrate pallet that allows an account to stake tokens to a smart contract. This pallet utilizes Substrate’s pallet hooks to set staking rewards for each block.
 
 Another feature in Astar’s runtime is the Custom Signature Call. This pallet allows accounts to execute Substrate extrinsic calls using an external ECDSA signature (eg: signing a call with Ledger Ethereum account). Substrate’s extrinsics modularity made it possible to wrap native calls with external signatures for expandability.
@@ -26,7 +26,7 @@ Scalability is the greatest challenge to all blockchains. To bring widespread ad
 
 Hoon Kim, Product Manager, Astar Network.
 
-The journey through the Substrate Builders Program
+## The journey through the Substrate Builders Program
 Builders receive Parity’s support in a systematic manner, including comprehensive assistance and advice in the areas of technical support, community support, funding opportunities, and strategic planning and feedback. Astar were one of the inaugural participants in the Substrate Builders Program and accomplished their major three milestones set out by the program with success and in stride.
 
 Some of the major highlights the Astar team achieved include:
@@ -35,23 +35,26 @@ The ideation, testing, and implementation of the lockdrop mechanism for supporte
 Implementation of the Ethereum Virtual Machine and continuous upgrades throughout its early lifespan as a part of Substrate. The EVM pallet has seen many improvements and Astar’s work on implementing their EVM has contributed a great deal to the Substrate ecosystem.
 Shiden, the canary network of Astar, won a parachain auction on the Kusama network after months of work testing on the Rococo testnet.
 Betting on the future of WebAssembly smart contracting, the team behind Astar has been contributing heavily to Solang, a transcompiler written in Rust which allows Solidity contracts to be compiled as Wasm binaries.
-What can you do with Astar?
+
+## What can you do with Astar?
 Today, developers can begin using Shiden and Astar networks as they are live on Kusama and Polkadot respectively. Here are a few things you can do right now with Shiden and Astar:
 
 Develop and Deploy your first smart contract on Astar/Shiden EVM
 Deploy your smart contract using Redspot by Patract Labs
 Learn how to deploy Wasm smart contracts with this tutorial
 Developers and end-users can learn how to benefit from Astar’s novel Dapp staking feature, a way for users and developers to support each other and gain the benefits of developing on Astar
-Builders for Builders: Astar Builders Program
+
+## Builders for Builders: Astar Builders Program
 As part of the Builders for Builders program, Astar’s graduation from the Substrate Builders Program provided them with the tools and knowledge to create their own builders program. So far there have been dozens of applications seeking support from the Astar team and community.
 
 The program offers support in various ways:
 
-Project grants: Support in helping your project navigate the Astar and Shiden Network treasury and grants processes.
-Marketing support: Introductions to relevant blockchain ecosystem players, targeting joint announcements and other co-marketing opportunities.
-Technical support: Category-specific support from other program members and engineers working on similar use cases, allowing members to collaborate and ask questions.
-Connections to supporters: Introductions to Astar and Shiden ecosystem supporters and accelerators.
-What is the Substrate Builders Program?
+- Project grants: Support in helping your project navigate the Astar and Shiden Network treasury and grants processes.
+- Marketing support: Introductions to relevant blockchain ecosystem players, targeting joint announcements and other co-marketing opportunities.
+- Technical support: Category-specific support from other program members and engineers working on similar use cases, allowing members to collaborate and ask questions.
+- Connections to supporters: Introductions to Astar and Shiden ecosystem supporters and accelerators.
+
+## What is the Substrate Builders Program?
 The Substrate Builders Program supports builders in the Substrate ecosystem. The program allows teams building Substrate-based blockchains, applications, or ecosystem components to benefit from Parity’s extensive experience and resources, thereby setting themselves up for success.
 
 The Substrate Builders Program is structured in three milestones, each lasting three months. Regular check-ins and milestones are reviewed by Parity’s Runtime Engineering team, providing guidance and feedback on the way the team is implementing their solution. After successfully completing all three milestones and/or going live (either solo or by becoming a parachain), the team graduates from the Substrate Builders Program.
