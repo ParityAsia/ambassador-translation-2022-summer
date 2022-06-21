@@ -256,7 +256,7 @@ cargo build -r
 ```
 **至此，已经完成了一个`模块Pallet`！** 现在要使用`模块Pallet`，必须在运行时正确配置它。
 
-### 在运行时中配置MaxBytesInHash  
+### 在运行时中配置MaxBytesInHash
 应该好奇存证`模块Pallet`使用`BoundedVec<u8, T::MaxBytesInHash>`类型作为存储的类型，但到目前为止我们还没有对`MaxBytesInHash`是什么有具体的概念。这个常量应该在运行时被设置为一个合理的某个数值。许多 `web3` 应用程序中使用的一种非常典型的哈希类型是[CID](https://github.com/multiformats/cid)，而 V1 版本的CID长度通常小于64 bytes。所以在这里`MaxBytesInHash`在运行时指定为这个长度（或更小）：  
 1. 在文本编辑器中打开 `runtime/src/lib.rs` 文件。  
 2. 更新`pallet_template::Config`代码块如下：
@@ -476,26 +476,3 @@ yarn start  # 开启一个新的开发节点
 本教程涵盖了基础知识，但并未深入到代码内部。但是，当努力构建自己的完全定制的区块链时，还更多的可做的事情。自定义 `模块Pallet`使得能够丰富区块链支持的功能。
 
 要了解有关创建自定义 `模块Pallet` 的可能性的更多信息，请浏览[FRAME 文档](https://docs.substrate.io/v3/runtime/frame/)和[How-to](https://docs.substrate.io/how-to-guides/v3/)指南。对于本教程的更具挑战性的版本，请前往[Substrate Kitties](https://docs.substrate.io/tutorials/v3/kitties/pt1/)教程。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
