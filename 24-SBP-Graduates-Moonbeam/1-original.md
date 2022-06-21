@@ -1,13 +1,13 @@
-SBP Graduates: Moonbeam
-Parity Technologies
-Parity Technologies
+---
+title: 'SBP Graduates: Moonbeam'
+src: https://www.parity.io/blog/substrate-builders-program-graduates-moonbeam
+author: Parity Technologies
+snapshot-date: 2022-06-18
+---
 
-Powering the decentralized Web @ Parity Technologies
+# SBP Graduates: Moonbeam
 
-February 23, 2022 in Community, Polkadot, Parity Substrate
-
-3 min read
-
+![builder](assets/builder.jpeg)
 
 SBP Graduates highlights teams that have successfully completed the Substrate Builders Program and launched a parachain on Polkadot. This post takes a look at the second project to win a parachain auction on Polkadot: Moonbeam.
 
@@ -19,7 +19,7 @@ Moonbeam has benefited from the direct support of the Substrate Builders Program
 
 Read the entire case study at Substrate.io
 
-The journey through the Substrate Builders Program
+## The journey through the Substrate Builders Program
 Moonbeam is one of the 17 inaugural participants in the Substrate Builders Program, which was announced on March 5th, 2020. The team behind Moonbeam noticed the capabilities of Substrate ever since Gavin Wood’s unveiling of it at the Energy Web Summit in 2018, nearly four years ago. Since starting at nearly the beginning of Substrate’s lifetime, the Moonbeam team had a clear goal and were determined to achieve it by building their chain on Substrate. Their time in the Substrate Builders Program gave them the added support and expertise to accomplish major milestones to finally reach earning a parachain slot on Polkadot, and those major milestones are:
 
 Developed a testnet, Moonbase Alpha, for testing implementations of new features and base layer compatibility.
@@ -34,16 +34,12 @@ Added pub/sub for the ability to subscribe to Ethereum smart contracts events, a
 
 Bridge integrations to other blockchains for maximum interoperability including Multichain, Connext, Wanchain, and RelayChain.
 
-What can you do on Moonbeam?
+## What can you do on Moonbeam?
 Users can already begin using the dozens of applications deployed on Moonbeam today, and developers and projects can dig into their well-documented wiki to learn more about how to deploy to Moonbeam.
 
 Developers who are experienced with EVM libraries and tooling will feel right at home using Moonbeam, as the most popular Ethereum libraries such as Web3.js and Ethers.js are fully compatible. EVM development environments such as Truffle, OpenZeppelin, and Remix are also fully compatible with Moonbeam, allowing developers to seamlessly integrate their applications with Moonbeam and expand their audience to the Polkadot community.
 
-What is the Substrate Builders Program?
+## What is the Substrate Builders Program?
 The Substrate Builders Program supports builders in the Substrate ecosystem. The program allows teams building Substrate-based blockchains, applications, or ecosystem components to benefit from Parity’s extensive experience and resources, thereby setting themselves up for success.
 
 The Substrate Builders Program committee assesses each project’s unique vision, goals and needs and helps them devise a plan that can set them up for success. The program is then structured into three milestones, each lasting three months. Regular check-ins and milestones are reviewed by Parity’s Runtime Engineering team, providing guidance and feedback on the way the team is implementing their solution. After successfully completing all three milestones and/or going live (either solo or by becoming a parachain), the team graduates from the Substrate Builders Program.
-
-—
-
-Have an idea or project built for or on Substrate? The Substrate Builders program can support your project up to launch and will continue to offer longer-term support depending on your project’s needs. Learn more and apply now.
