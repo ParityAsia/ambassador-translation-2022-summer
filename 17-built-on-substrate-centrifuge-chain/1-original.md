@@ -1,0 +1,55 @@
+---
+title: 'Built on Substrate: Centrifuge Chain'
+src:
+- 'https://www.parity.io/blog/built-on-substrate-centrifuge-chain/'
+author: Puil Lucsok
+snapshot-date: 2022-06-21
+---
+
+# Built on Substrate: Centrifuge Chain
+
+Currently, the flow of financial information and money is opaque and disconnected. The data silos and fragmentation that exist today create roadblocks for businesses, especially SMEs, to access the financing they need for quick, sustainable growth. Centrifuge, the team behind Centrifuge OS and Tinlake, is delivering a next-generation approach to replace the traditional financial supply chain of invoices and payments.
+
+Centrifuge OS is an open, decentralized platform to connect traditional invoices and token-based assets on the blockchain, specifically the Centrifuge chain. This blockchain will allow businesses to exchange verified business documents (such as invoices) and tokenize those assets for further financing.
+
+The Centrifuge chain testnet “Amber”, built on Substrate, is already live. There, implementations of the latest features are being tested. This testnet lays the foundation for a chain for any business to use while maintaining ownership of their data, including their validated company details, reputation, business relationships, and subsequent transactions. A peer-to-peer layer, coupled with Centrifuge Chain, allows businesses to exchange business documents (such as invoices) and tokenize those assets. Tinlake, the securitization protocol built on top, completes the Centrifuge OS by enabling these tokenized assets to have greater access to financing - thereby unlocking value that has previously been inaccessible.
+
+## Changing the way we get paid
+
+One project that has adopted Centrifuge for greater access to financing for their users is Paperchain. Paperchain is a new way for digital content creators to consolidate revenues and performance data across the many services they use, such as YouTube, Spotify, Apple iTunes, and many others. Each of these services has their proprietary systems for distributing royalties to creators and artists, their own fragmented data structures, all with varying disbursement methodologies and time frames. To make matters worse, the flow of payouts involves sometimes up to 30 individual parties that each cause holdups along this financial supply chain, making the process extremely expensive and time-consuming for everyone involved. In the end, artists must wait sometimes up to a year for their payments to clear.
+
+Paperchain has already done the work of analyzing data streams from multiple content providers to transparently and accurately project earnings for artists, and is working closely with the Centrifuge team to enable a new system that would allow royalties to be distributed in a more timely fashion. By utilizing privacy-preserving non-fungible tokens (NFTs), combined with unforgeable data streams from content distributors, a new market paradigm is created that allows a lending/borrowing market to pay artists quickly. The NFTs built into Centrifuge chain are based on Ethereum’s ERC-721 standard. The demo has been proven on the Ethereum mainnet, and with the testnet from Centrifuge launched last month, more optimizations are on their way.
+
+## Why is Centrifuge choosing Substrate?
+
+Substrate is the framework for building blockchains that enables organizations to only build the logic needed for a specific purpose. Because Substrate’s architecture includes peer-to-peer networking, cryptographic libraries, scalable consensus algorithms, and other blockchain primitives out-of-the-box, Centrifuge is able to focus on the business logic of their chain. This allows Centrifuge to utilize Parity’s experience in building many blockchains and use common features so they can move faster and implement the features they need quickly.
+
+While the entirety of Centrifuge OS includes both Ethereum and Substrate, they needed a developer-friendly framework that can deliver the capabilities needed to create a successful ecosystem and roll out feature-completeness in a timely manner. There are four major areas of optimization the Centrifuge team is using Substrate for:
+
+**Speed**: Optimizing for financial supply chain-specific use cases allows for faster execution of logic and safety of transactions. With Substrate, Centrifuge can customize low-level protocol logic to ensure speed.
+
+**Affordable transactions**: Centrifuge used Substrate to build a chain optimized for fast, affordable transactions. They opted for Substrate’s proof-of-stake consensus to further reduce transaction cost.
+
+**Storage**: A “state rent” model that requires users to pay for continuous availability of their data encourages decentralization because less resources are required to run a node. Substrate allows developers to create cutting-edge storage optimizations.
+
+**User / Developer Experience**: Building a custom Substrate chain enables rapid improvements for the user and developer experience for Centrifuge. Users require privacy, and this is something Substrate allows Centrifuge to build for directly — targeting the features they need from the start.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/gFcb7jeEdjg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Assembling the right pallets
+
+Pallets are the modules within the Substrate framework. They allow for the composability and customization developers and founders want because they reduce technical overhead, enable a high amount of extensibility to Substrate chains, and come with a community of active developers using and enhancing pallets. Centrifuge has become a contributing member of the Substrate ecosystem, putting out their own pallets and tooling for Centrifuge OS and the wider Substrate community.
+
+Pallets created by Centrifuge:
+
+* Zero-knowledge verifier: verifies zero-knowledge proofs generated for privacy of documents on-chain. (ZK Verifier)
+
+* Multi-signature accounts: creates m-of-n accounts for greater security and group control/access. (Multisig Accounts)
+
+* ERC-721-based NFT: creates non-fungible tokens to be used to correlate to on-chain documents, such as invoices on Centrifuge chain. (NFTs)
+
+By utilizing many of the pre-packaged pallets, the Centrifuge team was able to quickly launch their Amber testnet on Substrate. With the ease and speed of on-chain upgrades thanks to the sandboxed WebAssembly runtime, the pallets they will complete can be added without forking the chain or requiring all the nodes to update their client software.
+
+Centrifuge has also been working on two very important features outside of the runtime for Substrate: a Golang JSON-RPC interface and a Substrate-Ethereum bridge. The Centrifuge JSON-RPC interface has been written in Go so that their extensive team of Go developers can more easily interact with the Centrifuge chain without needing to dig into the specifics of Rust. This can also be used by other developers and teams more familiar with Go. As mentioned before, Centrifuge is working on Centrifuge OS which comprises both a Substrate-based chain and the Ethereum mainnet. Therefore, it’s critical for a bridge to exist between these chains to enable some of the features they’re creating, including the non-fungible tokens which depend on Ethereum but are used on the Centrifuge chain.
+
+Find out more about the latest teams building on Substrate by signing up for Parity’s newsletter. To keep up with Centrifuge’s work, follow their Twitter or Medium for the latest updates.
