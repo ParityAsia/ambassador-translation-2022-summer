@@ -39,7 +39,6 @@ OnFinality joined the Substrate Builders Program on November 22nd, 2020, and ach
 * An image validator tool by partner. This automatically checks if the provided image by the partner is a parachain code, a Substrate-based solo chain or a non-compatible image
 * Full Partner onboarding flow: Dedicated workplace creation for each partner together with a step-by-step guide on how to use the Partner Portal. Use this link to apply to join the Partner Portal
 * A detailed api-service reporting for partner’s managed networks
-
 * Complete Network Management, including:
     * upgrade latest image version
     * manage recommendations of each node type for storage and cpu/memory specifications
