@@ -1,3 +1,10 @@
+---
+title: '构建一个存证（proof of existence，简称PoE）的 dApp'
+src: https://github.com/gfan8w/translate_substrate/blob/main/proof-of-existence/%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AD%98%E8%AF%81dApp.md
+author: 腾达
+snapshot-date: 2022-06-18
+---
+
 ## 构建一个存证（proof of existence，简称PoE）的 dApp
 
 > 原文链接：https://docs.substrate.io/tutorials/v3/proof-of-existence/
@@ -8,7 +15,7 @@
 
 ### 数字对象和哈希
 区块链使用[密码学哈希](https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A2%BC%E9%9B%9C%E6%B9%8A%E5%87%BD%E6%95%B8)来存储数字记录，而不是用单个文件来保存它们. 哈希使区块链能够通过使用很小且唯一的哈希值有效地存储任意大小的文件。因为对文件的任何更改都会导致不同的哈希值，用户可以通过计算哈希值并将该哈希值与存储在链上的哈希值进行比较来证明文件的有效性。
-![file-hash.png](./file-hash.png)
+![hash.png](assets/hash.png)
 
 ### 数字对象和帐户签名
 区块链使用[公钥](https://zh.wikipedia.org/wiki/%E5%85%AC%E5%BC%80%E5%AF%86%E9%92%A5%E5%8A%A0%E5%AF%86)将数字身份映射到具有私钥的帐户。区块链会记录交易，作为交易一部分的帐户公钥也会记录在链上，由于账户信息是作为交易的一部分存储的，因此账户的控制者可以稍后证明他是最初上传文件的所有权人。
@@ -41,7 +48,7 @@
 ### 构建自定义模块(pallet)
 Substrate `node-template`模板程序有一个基于 [FRAME](https://docs.substrate.io/v3/runtime/frame/)的[运行时](https://docs.substrate.io/v3/concepts/runtime/)。 FRAME是一个代码库，允许您通过将称为“pallets”的模块来组合构建 Substrate 运行时。您可以将 `模块(pallet)` 视为定义区块链可以做什么的单独逻辑片段。Substrate 提供了许多用于基于 FRAME 的运行时的预构建`模块(pallet)`。
 
-![frame-runtime.png](./frame-runtime.png)
+![runtime.png](assets/runtime.png)
 
 本教程向您展示如何在您的自定义区块链中创建自己的 FRAME `模块(pallet)`。
 
@@ -456,11 +463,11 @@ yarn start  # 开启一个新的开发节点
    存证PoE模块Pallet为所选文件生成哈希并将其显示在`File Digest`栏位中。  
    由于该文件没有所有者或块号，因此可以声明它。  
 3. 单击`Create Claim`来声明并获得该文件的存证。
-![poe-component.png](./poe-component.png)
+![poe.png](assets/poe.png)
 单击`Create Claim`将调用自定义存证模块Pallet中的函数`create_claim`。前端组件显示已完成交易的文件摘要、帐户标识符和块号。  
 
 4. 验证声明存证是否成功并且新claimCreated事件出现在事件组件中。
-![poe-claimed.png](./poe-claimed.png)
+![claime.png](assets/claime.png)
 前端组件识别出该文件现在已被声明，并提供撤销声明的选项。
 请记住，只有所有者才能撤销存证。如果选择另一个用户帐户，则将禁用撤销选项。
 

@@ -1,22 +1,27 @@
-Build a proof of existence dApp
-Beginner1 Hour
-RustFRAMEReactJS
+---
+title: 'Build a proof of existence dApp'
+src: https://docs.substrate.io/tutorials/v3/proof-of-existence/
+author: Parity Technologies
+snapshot-date: 2022-06-18
+---
+
+# Build a proof of existence dApp
 This tutorial illustrates how to create a custom proof-of-existence (PoE) service using the Substrate blockchain development framework and the FRAME library.
 
 Proof of existence is an approach to validating the authenticity and ownership of a digital object by using the object information stored on the blockchain. Because the blockchain associates a timestamp and signature with the object, the blockchain record can be used to verify—to serve as proof—that a particular object existed at a specific date and time. It can also verify who the owner of a record was at that date and time.
 
-Digital objects and hashes
+## Digital objects and hashes
 Instead of individual files, the blockchain stores digital records using a cryptographic hash. The hash enables the blockchain to store files of arbitrary size efficiently by using a small and unique hash value. Because any change to a file would result in a different hash, users can prove the validity of a file by computing the hash and comparing that hash with the hash stored on chain.
 
-File Hash
+![hash](assets/hash.png)
 
-Digital objects and account signatures
+## Digital objects and account signatures
 Blockchains use public keys to map digital identities to accounts that have private keys. The blockchain records the account you use to store the hash for a digital object as part of the transaction. Because the account information is stored as part of the transaction, the controller of the account can later prove ownership as the person who initially uploaded the file.
 
-Time needed to complete this tutorial
+## Time needed to complete this tutorial
 This tutorial requires compiling Rust code and takes approximately one to two hours to complete.
 
-Before you begin
+## Before you begin
 Before you begin, verify the following:
 
 You have configured your environment for Substrate development by installing Rust and the Rust toolchain.
@@ -35,7 +40,7 @@ Start a blockchain node that contains a custom pallet.
 
 Add front-end code that exposes the proof-of-existence pallet.
 
-Design the application
+## Design the application
 The proof of existence application exposes the following callable functions:
 
 create_claim() allows a user to claim the existence of a file by uploading a hash.
@@ -44,14 +49,16 @@ revoke_claim() allows the current owner of a claim to revoke ownership.
 
 These functions only require you to store information about the proofs that have been claimed, and who made those claims.
 
-Build a custom pallet
+### Build a custom pallet
 The Substrate node template has a FRAME-based runtime. FRAME is a library of code that allows you to build a Substrate runtime by composing modules called "pallets". You can think of the pallets as individual pieces of logic that define what your blockchain can do. Substrate provides you with a number of pre-built pallets for use in FRAME-based runtimes.
 
-Runtime composition
+![runtime](assets/runtime.png)
+
+### Runtime composition
 
 This tutorial shows you how to create your own FRAME pallet to be included in your custom blockchain.
 
-Set up scaffolding for your pallet
+### Set up scaffolding for your pallet
 This tutorial demonstrates how to create a custom pallet from scratch. Therefore, the first step is to remove some files and content from the files in the node template directory.
 
 Open a terminal shell and navigate to the root directory for the node template.
@@ -59,15 +66,19 @@ Open a terminal shell and navigate to the root directory for the node template.
 Change to the pallets/template/src directory by running the following command:
 
 
-COPY
+```
 cd pallets/template/src
+```
+
 Remove the following files:
 
 
-COPY
+```
 benchmarking.rs
 mock.rs
 tests.rs
+```
+
 Open the pallets/template/src/lib.rs file in a text editor.
 
 This file contains code that you can use as a template for a new pallet. You won't be using the template code in this tutorial. However, you can review the template code to see what it provides before you delete it.
@@ -75,7 +86,7 @@ This file contains code that you can use as a template for a new pallet. You won
 Replace all contents of pallets/template/src/lib.rs with the following skeleton code that includes a few minimal macros for FRAME V2:
 
 
-COPY
+```
 #![cfg_attr(not(feature = "std"), no_std)]
 
   pub use pallet::*;
@@ -113,6 +124,8 @@ COPY
       #[pallet::call]
       impl<T: Config> Pallet<T> {}
   }
+```
+
 You now have a scaffold that includes placeholders for events, errors, storage, and callable functions. You will replace the TODO blocks step by step to build out the full PoE pallet.
 
 Save your changes.
@@ -120,21 +133,23 @@ Save your changes.
 (Optionally) check that your code compiles by running the following command:
 
 
-COPY
+```
 # Quick Check the template works *only*
 cargo check -p node-template-runtime
 # --- AND/OR ---
 # Full release build of the node template, inclusive of the template
 cargo build -r
+```
+
 This will include some warnings, but should be compilable
 
-Configure the pallet to emit events
+### Configure the pallet to emit events
 Every pallet has a Rust "trait" called Config. This trait is used to set the interface for the FRAME system and sets the required associated types to be concretely defined in a runtime that includes this pallet. For this tutorial, the configuration setting only enables the pallet to emit events, as almost every pallet does.
 
 To define the Config trait for the proof-of-existence pallet, open the pallets/template/src/lib.rs file in a text editor and update the #[pallet::config] block with to match the following code block:
 
 
-COPY
+```
 /// Configure the pallet by specifying the parameters and types on which it depends.
     #[pallet::config]
     pub trait Config: frame_system::Config {
@@ -143,7 +158,9 @@ COPY
         /// For constraining the maximum bytes of a hash used for any proof
         type MaxBytesInHash: Get<u32>;
     }
-Implement pallet events
+```
+
+### Implement pallet events
 Now that you've configured the pallet to emit events, you are ready to define those events. As described in Design the application, the proof-of-existence pallet emits an event under the following conditions:
 
 When a new proof is added to the blockchain.
@@ -153,7 +170,7 @@ Each event also displays an AccountId to identify who triggered the event and th
 To implement the pallet events, update the #[pallet::event] block to match the following code block:
 
 
-COPY
+```
 // Pallets use events to inform users when important changes are made.
     // Event documentation should end with an array that provides descriptive names for parameters.
     // https://docs.substrate.io/v3/runtime/events-and-errors
@@ -165,7 +182,9 @@ COPY
         /// Event emitted when a claim is revoked by the owner. [who, claim]
         ClaimRevoked(T::AccountId, BoundedVec<u8, T::MaxBytesInHash>),
     }
-Include pallet errors
+```
+
+### Include pallet errors
 The events you defined indicate when calls to the pallet have completed successfully. Errors indicate when a call has failed, and why it has failed. For this tutorial, you define the following error conditions:
 
 An attempt to claim a proof that has already been claimed.
@@ -177,7 +196,7 @@ An attempt to revoke a proof that has been claimed by another account.
 To implement the errors for the proof-of-existence pallet, replace the // TODO: add #[pallet::error] block line with the following code block:
 
 
-COPY
+```
 #[pallet::error]
     pub enum Error<T> {
         /// The proof has already been claimed.
@@ -187,13 +206,15 @@ COPY
         /// The proof is claimed by another account, so caller can't revoke it.
         NotProofOwner,
     }
-Implement a storage map for stored items
+```
+
+### Implement a storage map for stored items
 To add a new proof to the blockchain, the proof-of-existence pallet requires a storage mechanism. To address this requirement, you can create a hash map that maps each proof to its owner and records the block number when the proof was made. To create this hash map, you can use the FRAME StorageMap trait.
 
 To implement storage for the proof-of-existence pallet, replace the // TODO: add #[pallet::storage] block line with the following code block:
 
 
-COPY
+```
 #[pallet::storage]
     /// Maps each proof to its owner and block number when the proof was made
     pub(super) type Proofs<T: Config> = StorageMap<
@@ -203,7 +224,9 @@ COPY
         (T::AccountId, T::BlockNumber),
         OptionQuery,
     >;
-Implement callable functions
+```
+
+### Implement callable functions
 The proof-of-existence pallet exposes two callable functions to users:
 
 create_claim() allows a user to claim the existence of a file with a proof.
@@ -217,7 +240,7 @@ If a proof does not have an owner and a block number, then it is available to be
 To implement this logic in the proof-of-existence pallet, replace the // TODO: add #[pallet::call] block line with the following code block:
 
 
-COPY
+```
 // Dispatchable functions allow users to interact with the pallet and invoke state changes.
     // These functions materialize as "extrinsics", which are often compared to transactions.
     // Dispatchable functions must be annotated with a weight and must return a DispatchResult.
@@ -276,9 +299,11 @@ COPY
             Ok(())
         }
     }
+```
+
 At this point you have a completed pallet! Now to use the pallet, we must correctly configure it in your runtime.
 
-Include MaxBytesInHash runtime configuration
+### Include MaxBytesInHash runtime configuration
 You should be curious that the proof-of-existence pallet uses the BoundedVec<u8, T::MaxBytesInHash> type for proofs, but thus far we have no concrete notion of what MaxBytesInHash is. This constant should be set in the runtime to something reasonable for use in your blockchain. One very typical hash type used in many web3 applications is a CID, and the V1 instance of these is typically less than 64 bytes in length. So here we specify MaxBytesInHash to be this length (or less) in the runtime:
 
 Open the runtime/src/lib.rs file in a text editor.
@@ -286,22 +311,26 @@ Open the runtime/src/lib.rs file in a text editor.
 Update the pallet_template::Config block to include:
 
 
-COPY
+```
 /// Configure the pallet-template in pallets/template.
 impl pallet_template::Config for Runtime {
     type Event = Event;
     type MaxBytesInHash = frame_support::traits::ConstU32<64>;
 }
+```
+
 Save your changes and close the file.
 
 (Optionally) check that your code compiles by running the following command:
 
 
-COPY
+```
 cargo check -p node-template-runtime
+```
+
 Something not working? There is a full Node Template solution here to use as a reference if you're stuck. Check the commit diff from the base template for the exact changes built on the polkadot-v0.9.23 release of the templates.
 
-Build the runtime with your new pallet
+## Build the runtime with your new pallet
 After you've copied all of the parts of the proof-of-existence pallet into the pallets/template/lib.rsfile, you are ready to compile and start the node.
 
 To compile and start the updated Substrate node:
@@ -313,21 +342,25 @@ Change to the root directory for the node template.
 Compile the node template by running the following command:
 
 
-COPY
+```
 cargo build --release
+```
+
 Start the node in development mode by running the following command:
 
 
-COPY
+```
 ./target/release/node-template --dev
+```
+
 The --dev option starts the node using the predefined development chain specification. Using the --dev option ensures that you have a clean working state any time you stop and restart the node.
 
 Verify the node produces blocks.
 
-Build a custom front-end component
+## Build a custom front-end component
 Now that you have a new blockchain running with the custom proof-of-existence pallet, let's add a custom React component to the front-end template. This React component enables you to expose the proof-of-existence capabilities and interact with the new pallet you created.
 
-Add your custom react component
+### Add your custom react component
 Open a new terminal shell on your computer, then change to the root directory where you installed the front-end template.
 
 Open the src/TemplateModule.js file in a text editor.
@@ -337,7 +370,7 @@ Delete the entire contents of that file.
 Copy and paste the following code into thesrc/TemplateModule.js file:
 
 
-COPY
+```
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Grid, Message } from 'semantic-ui-react'
 
@@ -475,20 +508,23 @@ export default function TemplateModule(props) {
   return api.query.templateModule ? <Main {...props} /> : null
 
 }
+```
+
 Save your changes and close the file.
 
 Start the front-end template by running the following commands:
 
-
-COPY
+```
 nvm install # use the correct node version
 yarn        # instal deps
 yarn start  # start a dev server
+```
+
 This will open up a new tab with the front-end serving at http://localhost:8000.
 
 Something not working? There is a full Front End Template solution here to use as a reference if you're stuck. Check the commit diff from the base template for the exact changes built on the polkadot-v0.9.23 release of the templates.
 
-Submit a proof
+## Submit a proof
 To test the proof-of-existence pallet using the new front-end component:
 
 Find the component at the bottom of the page.
@@ -501,19 +537,19 @@ Because the file does not have an owner or block number, it is available to clai
 
 Click Create Claim to take ownership of the file.
 
-Proof Of Existence Component
+![poe](assets/poe.png)
 
 Clicking Create Claim calls the create_claim function in the custom proof-of-existence pallet. The front-end component displays the file digest, account identifier, and block number for the completed transaction.
 
 Verify the claim is successful and a new claimCreated event appears in the Events component.
 
-Claimed File
+![claim](assets/claim.png)
 
 The front-end component recognizes that the file is now claimed, and gives you the option to revoke the claim.
 
 Remember, only the owner can revoke the claim. If you select another user account, the revoke option is disabled.
 
-Next steps
+## Next steps
 🎉Congratulations!🎉
 
 In this tutorial, you learned the basics of how to create a new custom pallet, including:
