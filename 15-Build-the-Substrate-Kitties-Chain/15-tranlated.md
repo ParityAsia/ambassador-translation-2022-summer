@@ -1,3 +1,10 @@
+---
+title: 'XCM: 跨共识消息格式'
+src: https://github.com/Akagi201/rust-docs/blob/master/polkadot/polkadot-blog-xcm-p1.md
+author: Akagi201 (https://github.com/Akagi201)
+snapshot-date: 2022-05-27
+---
+
 欢迎来到Substrate Kitties课程。 本课程将向您介绍如何构建一个可以创建并持有非同质化代币（NFT，这个NFT名称为Substrate Kitties）的区块链。课程分为部2部分：
 
 Part I 描述如何构建Kitties pallet，以及这个pallet怎样与你所创建的Substrate Kitties应用进行交互。

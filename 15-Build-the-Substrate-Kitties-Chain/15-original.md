@@ -1,3 +1,10 @@
+---
+title: 'XCM: The Cross-Consensus Message Format'
+src: https://polkadot.network/blog/xcm-the-cross-consensus-message-format/
+author: Gavin Wood
+snapshot-date: 2022-05-27
+---
+
 Build the Substrate Kitties Chain
 Intermediate2 Hours
 FRAMERust
